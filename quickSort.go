@@ -7,44 +7,29 @@ func getPivot(array []int) int {
 	return res
 }
 
-func swapPivot(array []int, start int, end int) int {
-	pivot := getPivot(array)
-	pivot = array[start]
-	swapIdx := start
-	for i := start + 1; i <= end; i++ {
-		if pivot >= array[i] {
-			swapIdx++
-			temp := array[i]
-			array[i] = array[swapIdx]
-			array[swapIdx] = temp
-		}
-	}
-	temp := array[start]
-	array[start] = array[swapIdx]
-	array[swapIdx] = temp
+func quickSort(array []int, getPivot func ([] int) int) []int {
+	left := 0
+	right := len(array)-1
 
-	return swapIdx
-}
-
-func sorting(array []int, left int, right int) []int {
 	if left < right {
-		pivotIndex := swapPivot(array, left, right)
-		sorting(array, left, pivotIndex-1)
-		sorting(array, pivotIndex+1, right)
-	}
-	return array
-}
+		pivot := getPivot(array)
+		swapIdx := left
+		for i := left + 1; i <= right; i++ {
+			if pivot >= array[i] {
+				swapIdx++
+				array[i], array[swapIdx] = array[swapIdx], array[i]
+			}
+		}
+		array[left], array[swapIdx] = array[swapIdx], array[left]
 
-func quickSort(array []int, getPivot func([]int) int) []int {
-	sorting(array, 0, len(array)-1)
-	if len(array) > 0 {
-		getPivot(array)
+		quickSort(array[:swapIdx], getPivot)
+		quickSort(array[swapIdx + 1:], getPivot)
 	}
 	return array
 }
 
 func main() {
-	nums := []int{82, 252, 101, 83}
-	fmt.Println(nums)
+	nums := []int{ 7, 7, -7 ,252 ,7 ,-95 ,15 }
+	fmt.Println(nums[: 7])
 	fmt.Println(quickSort(nums, getPivot))
 }
